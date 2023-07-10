@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "7442963705",
+    "project_id": "loginauthentication-a2b5b",
+    "storage_bucket": "loginauthentication-a2b5b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:7442963705:android:7a97799985b5ea142c5628",
+        "android_client_info": {
+          "package_name": "com.example.login_starbucks"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "7442963705-lof3i4hp61j2bits2mm69gmkdu86edth.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD60VcSsx_wGi_xwLeRdE4FHDXU8XGq2Ws"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "7442963705-lof3i4hp61j2bits2mm69gmkdu86edth.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
