@@ -6,7 +6,6 @@ import 'package:login_starbucks/aplication/screens/login_screen.dart';
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Login Demo',
@@ -14,7 +13,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
       ),
       home: BlocProvider(
-        create: (context) => LoginBloc(),
+        create: (context) => LoginBloc(context),
         child: const LoginScreen(),
       ),
     );

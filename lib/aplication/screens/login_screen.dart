@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -5,22 +6,23 @@ import 'package:login_starbucks/aplication/blocs/login_bloc/login_bloc.dart';
 import 'package:login_starbucks/aplication/controllers/controllers.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen();
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final loginBloc = LoginBloc(context);
     final colors = Theme.of(context).colorScheme;
     final border = OutlineInputBorder(borderRadius: BorderRadius.circular(40));
+    final router = GoRouter.of(context);
 
     return SafeArea(
       child: Scaffold(
-        body: BlocListener< LoginBloc ,LoginState  >(
+        body: BlocListener<LoginBloc, LoginState>(
           listener: (context, state) {
-            if(state.status == FormzStatus.submissionSuccess) {
+            if (state.status == FormzStatus.submissionSuccess) {
               context.go('/profile');
-
-            }else if(state.status == FormzStatus.submissionFailure) {
-                  // Mensaje de error
+            } else if (state.status == FormzStatus.submissionFailure) {
+              // Mensaje de error
             }
           },
           child: BlocBuilder<LoginBloc, LoginState>(
@@ -79,8 +81,23 @@ class LoginScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 30),
                       ElevatedButton(
-                        onPressed: () {},
-                        child: const Text('Iniciar sesión'),
+                        onPressed: () {
+                          final email = context
+                              .read<LoginBloc>()
+                              .state
+                              .email
+                              .value; // Obtén el correo electrónico del formulario
+                          final password = context
+                              .read<LoginBloc>()
+                              .state
+                              .password
+                              .value; // Obtén la contraseña del formulario
+
+                          context.read<LoginBloc>().add(
+                              AuthenticateButtonPressed(
+                                  email: email, password: password));
+                        },
+                        child: Text('Iniciar Sesión'),
                       ),
                       const SizedBox(height: 30),
                       const Text('¿No tienes una cuenta?'),
@@ -97,5 +114,18 @@ class LoginScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+Future<bool> _authenticateUser(String email, String password) async {
+  try {
+    final userCredential =
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    return userCredential.user != null;
+  } catch (e) {
+    return false;
   }
 }
