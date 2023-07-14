@@ -24,8 +24,6 @@ class RegisterForm extends StatelessWidget {
   const RegisterForm({super.key});
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state.status == FormzStatus.submissionSuccess) {
@@ -40,23 +38,23 @@ class RegisterForm extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               _buildNameInput(),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               _buildPhoneInput(),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               _buildEmailInput(),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               _buildPasswordInput(),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               _buildRegisterButton(),
@@ -69,63 +67,73 @@ class RegisterForm extends StatelessWidget {
 }
 
 Widget _buildNameInput() {
-  final border = OutlineInputBorder(borderRadius: BorderRadius.circular(40));
+  final border = OutlineInputBorder(borderRadius: BorderRadius.circular(10));
 
   return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
     return TextFormField(
       onChanged: (value) => context.read<LoginBloc>().add(NameChanged(value)),
       decoration: InputDecoration(
-        errorBorder: border.copyWith(borderSide: BorderSide(color: Colors.red)),
-        focusedErrorBorder:
-            border.copyWith(borderSide: BorderSide(color: Colors.red)),
-        enabledBorder: border,
-        focusedBorder:
-            border.copyWith(borderSide: BorderSide(color: Colors.green)),
-        labelText: 'Nombre',
-        errorText: state.name.error != null ? 'Se requiere el nombre' : null,
-      ),
+          errorBorder:
+              border.copyWith(borderSide: const BorderSide(color: Colors.red)),
+          focusedErrorBorder:
+              border.copyWith(borderSide: const BorderSide(color: Colors.red)),
+          enabledBorder: border.copyWith(
+              borderSide: const BorderSide(color: Colors.deepPurple)),
+          focusedBorder: border.copyWith(
+              borderSide: const BorderSide(color: Colors.green)),
+          labelText: 'Nombre',
+          isDense: true,         
+          errorText: state.name.error != null ? 'Se requiere el nombre' : null,
+          hintText: 'Ingresar Nombre'),
     );
   });
 }
 
 Widget _buildPhoneInput() {
-  final border = OutlineInputBorder(borderRadius: BorderRadius.circular(40));
+  final border = OutlineInputBorder(borderRadius: BorderRadius.circular(10));
 
   return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
     return TextFormField(
       keyboardType: TextInputType.phone,
       onChanged: (value) => context.read<LoginBloc>().add(PhoneChanged(value)),
       decoration: InputDecoration(
-        errorBorder: border.copyWith(borderSide: BorderSide(color: Colors.red)),
-        focusedErrorBorder:
-            border.copyWith(borderSide: BorderSide(color: Colors.red)),
-        enabledBorder: border,
-        focusedBorder:
-            border.copyWith(borderSide: BorderSide(color: Colors.green)),
-        labelText: 'Telefono',
-        errorText: state.phone.error != null ? 'Se requiere el telefono' : null,
-      ),
+          errorBorder:
+              border.copyWith(borderSide: const BorderSide(color: Colors.red)),
+          focusedErrorBorder:
+              border.copyWith(borderSide: const BorderSide(color: Colors.red)),
+          enabledBorder: border.copyWith(
+              borderSide: const BorderSide(color: Colors.deepPurpleAccent)),
+          focusedBorder: border.copyWith(
+              borderSide: const BorderSide(color: Colors.green)),
+          labelText: 'Telefono',
+          isDense: true,
+          errorText:
+              state.phone.error != null ? 'Se requiere el telefono' : null,
+          hintText: 'Ingresa un número de celular'),
     );
   });
 }
 
 Widget _buildEmailInput() {
-  final border = OutlineInputBorder(borderRadius: BorderRadius.circular(40));
+  final border = OutlineInputBorder(borderRadius: BorderRadius.circular(10));
 
   return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
     return TextFormField(
       onChanged: (value) => context.read<LoginBloc>().add(EmailChanged(value)),
       decoration: InputDecoration(
           errorBorder:
-              border.copyWith(borderSide: BorderSide(color: Colors.red)),
+              border.copyWith(borderSide: const BorderSide(color: Colors.red)),
           focusedErrorBorder:
-              border.copyWith(borderSide: BorderSide(color: Colors.red)),
-          enabledBorder: border,
-          focusedBorder:
-              border.copyWith(borderSide: BorderSide(color: Colors.green)),
+              border.copyWith(borderSide: const BorderSide(color: Colors.red)),
+          enabledBorder: border.copyWith(
+              borderSide: const BorderSide(color: Colors.deepPurple)),
+          focusedBorder: border.copyWith(
+              borderSide: const BorderSide(color: Colors.green)),
           labelText: 'Correo Electronico',
+          isDense: true,
+          hintText: 'Ingresa un correo electronico',
           errorText: state.email.error != null ? 'Se requiere el email' : null,
-          suffixIcon: Icon(
+          suffixIcon: const Icon(
             Icons.email_outlined,
             color: Colors.lightGreen,
           )),
@@ -134,7 +142,7 @@ Widget _buildEmailInput() {
 }
 
 Widget _buildPasswordInput() {
-  final border = OutlineInputBorder(borderRadius: BorderRadius.circular(40));
+  final border = OutlineInputBorder(borderRadius: BorderRadius.circular(10));
 
   return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
     return TextFormField(
@@ -142,13 +150,16 @@ Widget _buildPasswordInput() {
       onChanged: (value) =>
           context.read<LoginBloc>().add(PasswordChanged(value)),
       decoration: InputDecoration(
-        errorBorder: border.copyWith(borderSide: BorderSide(color: Colors.red)),
+        errorBorder:
+            border.copyWith(borderSide: const BorderSide(color: Colors.red)),
         focusedErrorBorder:
-            border.copyWith(borderSide: BorderSide(color: Colors.red)),
+            border.copyWith(borderSide: const BorderSide(color: Colors.red)),
         enabledBorder: border,
+        isDense: true,
         focusedBorder:
-            border.copyWith(borderSide: BorderSide(color: Colors.green)),
+            border.copyWith(borderSide: const BorderSide(color: Colors.green)),
         labelText: 'Contraseña',
+        hintText: 'Contraseña con 6 digitos o más ',
         errorText:
             state.password.error != null ? 'Se requiere una contraseña' : null,
       ),
@@ -157,8 +168,6 @@ Widget _buildPasswordInput() {
 }
 
 Widget _buildRegisterButton() {
-  final border = OutlineInputBorder(borderRadius: BorderRadius.circular(40));
-
   return BlocBuilder<LoginBloc, LoginState>(
     builder: (context, state) {
       return ElevatedButton(
@@ -171,7 +180,8 @@ Widget _buildRegisterButton() {
                     email: state.email,
                     password: state.password));
               },
-        child: Text('Registrarse'),
+        child: const Text('Registrarse'),
+        
       );
     },
   );

@@ -14,10 +14,6 @@ final appRouter = GoRouter(routes: [
   ),
   GoRoute(
     path: '/profile',
-    builder: (context, state) {
-      final email = state.queryParameters['email'] ?? '';
-      final uid = state.queryParameters['uid'] ?? '';
-      return ProfileScreen(email: email, uid: uid);
-    },
+    builder: (context, state) => const ProfileScreen(),
   )
 ]);

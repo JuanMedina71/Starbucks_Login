@@ -1,20 +1,24 @@
 part of 'login_bloc.dart';
 
 class LoginState extends Equatable {
-
-
+  
   final NameField name;
   final PhoneField phone;
   final EmailField email;
   final PasswordField password;
   final FormzStatus status;
 
+  bool get isAuthenticated {
+    return status == FormzStatus.submissionSuccess;
+  }
+  
   const LoginState({
     this.name = const NameField.pure(),
     this.phone = const PhoneField.pure(),
     this.email = const EmailField.pure(),
     this.password = const PasswordField.pure(),
     this.status = FormzStatus.pure,
+
   });
 
 
@@ -39,3 +43,4 @@ class LoginState extends Equatable {
 }
 
 class LoginInitial extends LoginState {}
+

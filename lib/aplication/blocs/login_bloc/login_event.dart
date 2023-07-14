@@ -59,3 +59,14 @@ class AuthenticateButtonPressed extends LoginEvent {
   @override
   List<Object> get props => [email, password];
 }
+
+class LoginSuccess extends LoginEvent {
+  final String uid;
+  final String email;
+
+  const LoginSuccess({required this.uid, required this.email});
+
+@override
+List<Object> get props => [uid, email];
+
+}

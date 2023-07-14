@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:login_starbucks/aplication/controllers/controllers.dart';
 
 part 'login_event.dart';
@@ -75,10 +74,30 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             await _authenticateUser(event.email, event.password);
 
         if (isAuthenticated) {
+          // Emite el estado de login exitoso
           emit(state.copyWith(status: FormzStatus.submissionSuccess));
 
-          // Navegar a la siguiente pantalla utilizando GoRouter
-          GoRouter.of(context).go('/profile?email=${event.email}');
+          final userCredential = await _auth.signInWithEmailAndPassword(
+            email: state.email.value, password: state.password.value);
+
+          final uid = userCredential.user!.uid;
+
+
+          final userDoc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+          
+
+          if(userDoc.exists) {
+            final userData = userDoc.data() as Map<String, dynamic>;
+            final name = userData['name'];
+            final phone = userData['phone'];
+
+            emit(state.copyWith(status: FormzStatus.submissionSuccess, name: name, phone: phone));
+
+
+          } else { 
+          
+          }
+
         } else {
           emit(state.copyWith(status: FormzStatus.submissionFailure));
         }
@@ -86,21 +105,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         emit(state.copyWith(status: FormzStatus.submissionFailure));
       }
     });
-  }
-
-  Future<bool> _checkEmailExists(String email) async {
-    try {
-      final userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: 'password',
-      );
-
-      // Si el inicio de sesión tiene éxito, el correo existe en Firebase Authentication
-      return userCredential.user != null;
-    } catch (e) {
-      return false;
-    }
+  
   }
 
   Future<bool> _authenticateUser(String email, String password) async {
@@ -113,64 +118,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
-  Stream<LoginState> mapEventToState(LoginEvent event) async* {
-    if (event is NameChanged) {
-      yield state.copyWith(name: NameField.dirty(event.name));
-    } else if (event is PhoneChanged) {
-      yield state.copyWith(phone: PhoneField.dirty(event.phone));
-    } else if (event is EmailChanged) {
-      yield state.copyWith(email: EmailField.dirty(event.email));
-    } else if (event is PasswordChanged) {
-      yield state.copyWith(password: PasswordField.dirty(event.password));
-    } else if (event is RegisterButtonPressed) {
-      yield* _mapRegisterButtonPressedToState(event);
-    } else if (event is AuthenticateButtonPressed) {
-      yield state.copyWith(status: FormzStatus.submissionInProgress);
 
-      try {
-        final isAuthenticated =
-            await _authenticateUser(event.email, event.password);
 
-        if (isAuthenticated) {
-          yield state.copyWith(status: FormzStatus.submissionSuccess);
-          GoRouter.of(context).go('/profile?email=${event.email}');
-        } else {
-          yield state.copyWith(status: FormzStatus.submissionFailure);
-        }
-      } catch (error) {
-        yield state.copyWith(status: FormzStatus.submissionFailure);
-      }
-    }
-  }
-
-  Stream<LoginState> _mapRegisterButtonPressedToState(
-      RegisterButtonPressed event) async* {
-    if (state.status == FormzStatus.valid) {
-      yield state.copyWith(status: FormzStatus.submissionInProgress);
-
-      try {
-        final userCredential = await _auth.createUserWithEmailAndPassword(
-          email: state.email.value,
-          password: state.password.value,
-        );
-
-        final userDocRef = FirebaseFirestore.instance
-            .collection('users')
-            .doc(userCredential.user!.uid);
-
-        final userData = {
-          'name': state.name.value,
-          'phone': state.phone.value,
-        };
-
-        await userDocRef.set(userData);
-
-        yield state.copyWith(status: FormzStatus.submissionSuccess);
-      } catch (e) {
-        yield state.copyWith(status: FormzStatus.submissionFailure);
-      }
-    } else {
-      yield state.copyWith(status: FormzStatus.invalid);
-    }
-  }
 }

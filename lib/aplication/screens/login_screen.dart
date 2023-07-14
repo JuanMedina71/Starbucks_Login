@@ -1,19 +1,17 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:login_starbucks/aplication/blocs/login_bloc/login_bloc.dart';
 import 'package:login_starbucks/aplication/controllers/controllers.dart';
+import 'package:login_starbucks/config/router/router.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final loginBloc = LoginBloc(context);
     final colors = Theme.of(context).colorScheme;
     final border = OutlineInputBorder(borderRadius: BorderRadius.circular(40));
-    final router = GoRouter.of(context);
 
     return SafeArea(
       child: Scaffold(
@@ -81,7 +79,7 @@ class LoginScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 30),
                       ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           final email = context
                               .read<LoginBloc>()
                               .state
@@ -96,8 +94,20 @@ class LoginScreen extends StatelessWidget {
                           context.read<LoginBloc>().add(
                               AuthenticateButtonPressed(
                                   email: email, password: password));
+
+                          await Future.delayed(Duration.zero);
+
+                          final  isAuthenticated = context.read<LoginBloc>().state.copyWith(status: FormzStatus.submissionSuccess);
+
+                          if(isAuthenticated.isAuthenticated) {
+                            appRouter.push('/profile');
+                          }
+
+
+
+                                
                         },
-                        child: Text('Iniciar Sesión'),
+                        child: const Text('Iniciar Sesión'),
                       ),
                       const SizedBox(height: 30),
                       const Text('¿No tienes una cuenta?'),
@@ -117,15 +127,4 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
-Future<bool> _authenticateUser(String email, String password) async {
-  try {
-    final userCredential =
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-    return userCredential.user != null;
-  } catch (e) {
-    return false;
-  }
-}
+
