@@ -1,7 +1,4 @@
 
-import 'package:equatable/equatable.dart';
-
-
 enum FormzStatus {pure, valid, invalid, submissionInProgress, submissionSuccess, submissionFailure}
 
 
